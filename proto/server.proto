@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+package proto;
+
+import "block.proto";
+
+service CompactTxStreamer {
+    rpc GetLatestBlock(ChainSpec) returns (BlockID) {}
+    rpc GetBlock(BlockID) returns (CompactBlock) {}
+    rpc GetBlockRange(RangeFilter) returns (stream CompactBlock) {}
+    // rpc GetTransaction(TxFilter) returns (FullTransaction) {}
+}
+
+// Remember that proto3 fields are all optional.
+
+// Someday we may want to specify e.g. a particular chain fork.
+message ChainSpec {}
+
+
+message RangeFilter {
+    BlockID start = 1;
+    BlockID end = 2;
+}
+
+// A TxFilter contains the information needed to identify a particular
+// transaction: either a block and an index, or a direct transaction hash.
+message TxFilter {
+    BlockID blockID = 1;
+    uint64 txIndex = 2;
+    bytes txHash = 3;
+}
